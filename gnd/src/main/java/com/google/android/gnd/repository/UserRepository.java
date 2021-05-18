@@ -19,6 +19,7 @@ package com.google.android.gnd.repository;
 import com.google.android.gnd.model.User;
 import com.google.android.gnd.persistence.local.LocalDataStore;
 import com.google.android.gnd.rx.Schedulers;
+import com.google.android.gnd.rx.annotations.Cold;
 import io.reactivex.Completable;
 import javax.inject.Inject;
 
@@ -37,6 +38,7 @@ public class UserRepository {
     this.schedulers = schedulers;
   }
 
+  @Cold
   public Completable saveUser(User user) {
     return localDataStore.insertOrUpdateUser(user).observeOn(schedulers.io());
   }
