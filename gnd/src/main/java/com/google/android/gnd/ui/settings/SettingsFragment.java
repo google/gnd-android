@@ -16,11 +16,11 @@
 
 package com.google.android.gnd.ui.settings;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Toast;
 import androidx.annotation.Nullable;
+import androidx.browser.customtabs.CustomTabColorSchemeParams;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.preference.Preference;
 import androidx.preference.Preference.OnPreferenceChangeListener;
 import androidx.preference.Preference.OnPreferenceClickListener;
@@ -80,10 +80,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
   public boolean onPreferenceClick(Preference preference) {
     switch (preference.getKey()) {
       case Keys.VISIT_WEBSITE:
-        openUrl(preference.getSummary().toString());
+        openUrl(getString(R.string.ground_website));
         break;
       case Keys.FEEDBACK:
-        Toast.makeText(getContext(), "Not yet implemented", Toast.LENGTH_SHORT).show();
+        openUrl(getString(R.string.ground_android_github));
         break;
       default:
         return false;
@@ -92,8 +92,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
   }
 
   private void openUrl(String url) {
-    Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.setData(Uri.parse(url));
-    startActivity(intent);
+    CustomTabColorSchemeParams params =
+        new CustomTabColorSchemeParams.Builder()
+            .setToolbarColor(getResources().getColor(R.color.colorPrimary))
+            .build();
+
+    CustomTabsIntent customTabsIntent =
+        new CustomTabsIntent.Builder().setDefaultColorSchemeParams(params).build();
+
+    customTabsIntent.launchUrl(requireContext(), Uri.parse(url));
   }
 }
